@@ -33,7 +33,7 @@ export const Layout: FC<LayoutProps> = ({ children }: LayoutProps) => {
                 <Wallet className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold gradient-text">SplitEase</h1>
+                <h1 className="text-xl font-bold gradient-text">SplitPay</h1>
                 <p className="text-xs text-muted-foreground">Smart expense splitting</p>
               </div>
             </div>
@@ -65,7 +65,7 @@ export const Layout: FC<LayoutProps> = ({ children }: LayoutProps) => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2024 SplitEase. Split expenses with friends, simplified.
+              © 2024 SplitPay. Split expenses with friends, simplified.
             </p>
             <div className="flex gap-4 text-sm text-muted-foreground">
               <a href="#" className="hover:text-primary transition-colors">Privacy</a>

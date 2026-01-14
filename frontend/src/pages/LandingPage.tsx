@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { 
-  Wallet, 
-  Users, 
-  TrendingUp, 
-  CheckCircle, 
+import {
+  Wallet,
+  Users,
+  TrendingUp,
+  CheckCircle,
   Zap,
   Shield,
   ArrowRight,
@@ -93,7 +93,7 @@ export const LandingPage: FC = () => {
                 <Wallet className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold gradient-text">SplitEase</h1>
+                <h1 className="text-xl font-bold gradient-text">SplitPay</h1>
                 <p className="text-xs text-muted-foreground">Smart expense splitting</p>
               </div>
             </div>
@@ -111,7 +111,7 @@ export const LandingPage: FC = () => {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 md:py-32">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -121,20 +121,20 @@ export const LandingPage: FC = () => {
             <Zap className="w-4 h-4 mr-2" />
             Split expenses easily with friends
           </Badge>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
             Split Expenses
             <br />
             <span className="gradient-text">Effortlessly</span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
             The simplest way to track shared expenses with roommates, friends on trips, or any group activity.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="premium"
               className="text-lg"
               onClick={() => navigate('/login')}
@@ -142,8 +142,8 @@ export const LandingPage: FC = () => {
               Create Your First Group
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               className="text-lg"
             >
@@ -258,8 +258,8 @@ export const LandingPage: FC = () => {
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of groups managing their shared expenses effortlessly
             </p>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="premium"
               className="text-lg"
               onClick={() => navigate('/login')}
@@ -279,10 +279,10 @@ export const LandingPage: FC = () => {
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold">SplitEase</span>
+              <span className="font-semibold">SplitPay</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2024 SplitEase. Split expenses with friends, simplified.
+              © 2024 SplitPay. Split expenses with friends, simplified.
             </p>
             <div className="flex gap-6 text-sm text-muted-foreground">
               <a href="#" className="hover:text-primary transition-colors">Privacy</a>

@@ -137,7 +137,7 @@ export const LoginPage: FC = () => {
               <Wallet className="w-7 h-7 text-primary-foreground" />
             </div>
             <div className="text-left">
-              <h1 className="text-2xl font-bold gradient-text">SplitEase</h1>
+              <h1 className="text-2xl font-bold gradient-text">SplitPay</h1>
               <p className="text-sm text-muted-foreground">Smart expense splitting</p>
             </div>
           </div>
@@ -153,7 +153,7 @@ export const LoginPage: FC = () => {
                 ? 'Enter your email to receive a password reset link'
                 : isLogin
                   ? 'Sign in to manage your shared expenses'
-                  : 'Get started with SplitEase'}
+                  : 'Get started with SplitPay'}
             </CardDescription>
           </CardHeader>
 
