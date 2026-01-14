@@ -1,0 +1,33 @@
+# Ignore backend directory
+backend/
+
+# Ignore root level files
+go.mod
+go.sum
+*.go
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
