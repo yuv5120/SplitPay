@@ -1,510 +1,611 @@
-# Split-It (Full Stack)
+<div align="center">
 
-A full-stack expense splitting application with Firebase authentication, MongoDB persistence, and a modern React + Tailwind UI.
+# 💰 Split-It
 
-## Overview
-- Frontend: React (CRACO), TailwindCSS, Firebase Web SDK
-- Backend: Node.js (Express), MongoDB (Mongoose), Firebase Admin SDK
-- Auth: Firebase (ID token based); backend verifies tokens
-- Data: Groups with members and expenses, debt simplification, summaries
+### Smart Expense Splitting Made Simple
 
-## Monorepo Structure
-```
-Split-It/
-├── backend/                # Express API, MongoDB, Firebase Admin
-│   ├── src/
-│   │   ├── config/         # database, firebase
-│   │   ├── middleware/     # auth
-│   │   ├── models/         # User, Group
-│   │   └── routes/         # users, groups
-│   └── README.md           # Backend docs & endpoints
-└── frontend/               # React app (CRACO + Tailwind)
-  └── README.md           # CRA defaults
-```
+A modern, full-stack expense splitting application with real-time synchronization, intelligent debt simplification, and seamless group management.
 
-## Prerequisites
-- Node.js v18+
-- MongoDB installed and running locally
-- Firebase project (Service Account for backend; Web config for frontend)
+[![Go](https://img.shields.io/badge/Go-1.21+-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
-## Backend Setup
-1. Install dependencies
-```bash
-cd backend
-npm install
-```
-2. Add Firebase Admin credentials
-- Download service account JSON from Firebase Console → Project Settings → Service Accounts → "Generate new private key"
-- Save it as `backend/firebase-service-account.json`
+</div>
 
-3. Create `.env` in `backend/` (example)
-```env
-PORT=5001
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/expense-tracker
-FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json
-CLIENT_URL=http://localhost:3000
-```
-Note: The frontend defaults to `http://localhost:5001` (see `REACT_APP_API_URL`). Set `PORT=5001` here or override the frontend var.
+---
 
-4. Run the API
-```bash
-# development (auto-restart)
-npm run dev
-# production
-npm start
-```
-- Health check: `curl http://localhost:5001/health`
-- Detailed endpoints: see [backend/README.md](backend/README.md)
+## 🌟 Overview
 
-## Frontend Setup
-1. Install dependencies
-```bash
-cd frontend
-# use yarn (project declares yarn in packageManager) or npm
-yarn
-# or
-npm install
-```
-2. Configure Firebase Web SDK via env
-- Create `frontend/.env` from example: `cp frontend/.env.example frontend/.env`
-- Fill `REACT_APP_FIREBASE_*` values from your Firebase Web app settings.
-- The app reads envs in [frontend/src/lib/firebase.js](frontend/src/lib/firebase.js).
+Split-It is a comprehensive expense tracking and splitting application designed for groups, roommates, trips, and shared expenses. Built with performance and user experience in mind, it features a blazing-fast **Golang backend** and a beautiful **React frontend**.
 
-3. Point the app to your backend
-- Frontend reads `REACT_APP_API_URL` (default `http://localhost:5001`).
-- To change it, set in your shell or env file:
-```bash
-# macOS (zsh)
-export REACT_APP_API_URL=http://localhost:5000
-```
+### ✨ Key Features
 
-4. Run the app
-```bash
-yarn start
-# or
-npm start
-```
-- Opens `http://localhost:3000`
+- 🔐 **Secure Authentication** - Firebase-powered email/password authentication
+- 👥 **Group Management** - Create and manage multiple expense groups
+- 💸 **Smart Expense Tracking** - Add, edit, and delete expenses with ease
+- 🧮 **Debt Simplification** - Intelligent algorithm to minimize settlement transactions
+- ⚡ **High Performance** - Go backend ensures lightning-fast response times
+- 📱 **Responsive Design** - Beautiful UI built with TailwindCSS and Shadcn/ui
+- 🔒 **Enterprise Security** - JWT verification, CORS, rate limiting, and security headers
+- 📊 **Real-time Summaries** - Instant balance calculations and settlement suggestions
 
-## Running Together
-- Start backend in one terminal (`PORT=5001` recommended to match frontend default).
-- Start frontend in another terminal (`http://localhost:3000`).
-- Ensure `CLIENT_URL` in backend `.env` matches your frontend origin for CORS.
-
-## Key Features
-- Firebase Auth: Email/password login; backend verifies ID tokens
-- Groups & Expenses: Create/update/delete groups and expenses
-- Debt Simplification: See [frontend/src/lib/debtSimplification.js](frontend/src/lib/debtSimplification.js)
-- Secure API: Helmet, rate limiting, CORS, JSON parsing
-
-## Useful Scripts
-- Backend: `npm run dev` (nodemon) · `npm start`
-- Frontend: `yarn start` · `yarn build` · `yarn test` (or npm equivalents)
-
-## Troubleshooting
-- Port mismatch: Align backend `PORT` with frontend `REACT_APP_API_URL`
-- MongoDB not running: `brew services start mongodb-community@7.0` (macOS)
-- Auth errors: Ensure service account at `backend/firebase-service-account.json` and frontend Firebase config is valid
-- CORS: Set `CLIENT_URL` in backend `.env` (e.g., `http://localhost:3000`)
-
-## Next Steps
-- Replace any remaining local-only logic with API calls
-- Add integration tests and CI
-- Prepare deployment (MongoDB Atlas + Render/Vercel)
-
-## License
-Proprietary. All rights reserved.
-<<<<<<< HEAD
-# Expense Tracker Backend
-
-Backend API for the Expense Tracker application with Firebase Authentication and MongoDB.
+---
 
 ## 🏗️ Architecture
 
-- **Authentication**: Firebase Admin SDK
-- **Database**: MongoDB (local)
-- **Framework**: Express.js
-- **ODM**: Mongoose
+```mermaid
+graph TB
+    subgraph "Frontend Layer"
+        A[React App]
+        B[Firebase Auth SDK]
+        C[TailwindCSS UI]
+    end
+    
+    subgraph "Backend Layer"
+        D[Go Fiber Server]
+        E[Auth Middleware]
+        F[API Routes]
+    end
+    
+    subgraph "Data Layer"
+        G[MongoDB]
+        H[Firebase Admin]
+    end
+    
+    A --> B
+    A --> C
+    A -->|HTTP/REST| D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    B -.->|ID Token| E
+    
+    style A fill:#61DAFB,stroke:#000,stroke-width:2px,color:#000
+    style D fill:#00ADD8,stroke:#000,stroke-width:2px,color:#fff
+    style G fill:#47A248,stroke:#000,stroke-width:2px,color:#fff
+    style H fill:#FFCA28,stroke:#000,stroke-width:2px,color:#000
+```
+
+---
 
 ## 📁 Project Structure
 
 ```
-backend/
-├── src/
-│   ├── config/
-│   │   ├── database.js       # MongoDB connection
-│   │   └── firebase.js       # Firebase Admin setup
-│   ├── middleware/
-│   │   └── auth.js           # Firebase token verification
-│   ├── models/
-│   │   ├── User.js           # User schema
-│   │   └── Group.js          # Group & Expense schemas
-│   ├── routes/
-│   │   ├── users.js          # User endpoints
-│   │   └── groups.js         # Group & Expense endpoints
-│   └── server.js             # Main server file
-├── .env                      # Environment variables
-├── .env.example             # Environment template
-├── package.json
-└── README.md
-```
-
-## 🚀 Setup Instructions
-
-### 1. Install Dependencies
-
-=======
-# Split-It (Full Stack)
-
-A full-stack expense splitting application with Firebase authentication, MongoDB persistence, and a modern React + Tailwind UI.
-
-## Overview
-- Frontend: React (CRACO), TailwindCSS, Firebase Web SDK
-- Backend: Node.js (Express), MongoDB (Mongoose), Firebase Admin SDK
-- Auth: Firebase (ID token based); backend verifies tokens
-- Data: Groups with members and expenses, debt simplification, summaries
-
-## Monorepo Structure
-```
 Split-It/
-├── backend/                # Express API, MongoDB, Firebase Admin
-│   ├── src/
-│   │   ├── config/         # database, firebase
-│   │   ├── middleware/     # auth
-│   │   ├── models/         # User, Group
-│   │   └── routes/         # users, groups
-│   └── README.md           # Backend docs & endpoints
-└── frontend/               # React app (CRACO + Tailwind)
-    └── README.md           # CRA defaults
+├── backend/                    # Golang API Server
+│   ├── config/                 # Configuration modules
+│   │   ├── database.go        # MongoDB connection setup
+│   │   └── firebase.go        # Firebase Admin SDK initialization
+│   ├── middleware/            # HTTP middleware
+│   │   └── auth.go           # JWT token verification
+│   ├── models/               # Data models
+│   │   ├── user.go          # User schema and operations
+│   │   └── group.go         # Group and expense schemas
+│   ├── routes/              # API route handlers
+│   │   ├── users.go        # User endpoints
+│   │   └── groups.go       # Group and expense endpoints
+│   ├── main.go             # Application entry point
+│   ├── go.mod              # Go module dependencies
+│   └── .env                # Environment configuration
+│
+└── frontend/               # React Application
+    ├── src/
+    │   ├── components/    # Reusable UI components
+    │   ├── pages/        # Page components
+    │   ├── services/     # API service layer
+    │   └── utils/        # Utility functions
+    ├── public/           # Static assets
+    └── package.json      # Node dependencies
 ```
 
-## Prerequisites
-- Node.js v18+
-- MongoDB installed and running locally
-- Firebase project (Service Account for backend; Web config for frontend)
+---
 
-## Backend Setup
-1. Install dependencies
->>>>>>> 6e5eabb (docs: add root README, cleanup MDs; feat: env-based Firebase, flexible CORS)
+## 🚀 Quick Start
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Go 1.21+** - [Download](https://go.dev/dl/)
+- **Node.js 18+** - [Download](https://nodejs.org/)
+- **MongoDB** - [Local](https://www.mongodb.com/try/download/community) or [Atlas](https://www.mongodb.com/cloud/atlas)
+- **Firebase Project** - [Create one](https://console.firebase.google.com/)
+
+### 🔧 Backend Setup
+
+1. **Navigate to backend directory**
+   ```bash
+   cd backend
+   ```
+
+2. **Install Go dependencies**
+   ```bash
+   go mod download
+   ```
+
+3. **Configure Firebase**
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Navigate to **Project Settings** → **Service Accounts**
+   - Click **Generate New Private Key**
+   - Save the JSON file as `backend/firebase-service-account.json`
+
+4. **Set up environment variables**
+   
+   Create or edit `backend/.env`:
+   ```env
+   PORT=5000
+   MONGODB_URI=mongodb://localhost:27017/expense-tracker
+   FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json
+   CLIENT_URL=http://localhost:3000
+   NODE_ENV=development
+   ```
+
+5. **Start the server**
+   ```bash
+   # Development mode
+   go run main.go
+   
+   # Or build and run
+   go build -o split-it-backend
+   ./split-it-backend
+   
+   # With live reload (optional)
+   go install github.com/cosmtrek/air@latest
+   air
+   ```
+
+   ✅ Health check: `http://localhost:5000/health`
+
+### 🎨 Frontend Setup
+
+1. **Navigate to frontend directory**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Configure Firebase**
+   
+   Create `frontend/.env`:
+   ```env
+   REACT_APP_API_URL=http://localhost:5000
+   REACT_APP_FIREBASE_API_KEY=your_api_key
+   REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+   REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   REACT_APP_FIREBASE_APP_ID=your_app_id
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+   🌐 Opens at: `http://localhost:3000`
+
+### 🎯 Running Both Servers
+
+**Terminal 1 (Backend):**
 ```bash
-cd backend
-npm install
+cd backend && go run main.go
 ```
-<<<<<<< HEAD
 
-### 2. Install and Start MongoDB
-
-**macOS (using Homebrew):**
+**Terminal 2 (Frontend):**
 ```bash
-brew tap mongodb/brew
-brew install mongodb-community@7.0
-brew services start mongodb-community@7.0
+cd frontend && npm start
 ```
 
-**Linux (Ubuntu):**
-```bash
-sudo apt-get install -y mongodb-org
-sudo systemctl start mongod
-sudo systemctl enable mongod
+Then navigate to `http://localhost:3000` in your browser! 🎉
+
+---
+
+## 📡 API Documentation
+
+### Base URL
 ```
-
-**Windows:**
-Download and install from [MongoDB Download Center](https://www.mongodb.com/try/download/community)
-
-**Verify MongoDB is running:**
-```bash
-mongosh
-# Should connect to: mongodb://localhost:27017
+http://localhost:5000
 ```
-
-### 3. Setup Firebase Admin SDK
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Select your project (or create one)
-3. Go to **Project Settings** > **Service Accounts**
-4. Click **Generate New Private Key**
-5. Download the JSON file
-6. Rename it to `firebase-service-account.json`
-7. Place it in the `backend/` directory
-
-### 4. Configure Environment Variables
-
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-
-Update the values:
-```env
-PORT=5000
-=======
-2. Add Firebase Admin credentials
-- Download service account JSON from Firebase Console → Project Settings → Service Accounts → "Generate new private key"
-- Save it as `backend/firebase-service-account.json`
-
-3. Create `.env` in `backend/` (example)
-```env
-PORT=5001
->>>>>>> 6e5eabb (docs: add root README, cleanup MDs; feat: env-based Firebase, flexible CORS)
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/expense-tracker
-FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json
-CLIENT_URL=http://localhost:3000
-```
-<<<<<<< HEAD
-
-### 5. Start the Server
-
-**Development mode (with auto-restart):**
-```bash
-npm run dev
-```
-
-**Production mode:**
-```bash
-npm start
-```
-
-Server will run on `http://localhost:5000`
-
-## 📡 API Endpoints
 
 ### Authentication
 
-All endpoints (except `/health`) require a Firebase ID token in the Authorization header:
-```
+All protected endpoints require a Firebase ID token in the Authorization header:
+```http
 Authorization: Bearer <firebase-id-token>
 ```
 
-### Health Check
+### Endpoints
 
-**GET** `/health`
-- Check if server is running
-- No authentication required
+#### Health Check
+```http
+GET /health
+```
+Returns server health status.
 
-### User Endpoints
+---
 
-**POST** `/api/users/profile`
-- Get or create user profile
-- Auto-creates user on first login
+#### User Endpoints
 
-**PUT** `/api/users/profile`
-- Update user name
-- Body: `{ "name": "New Name" }`
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/api/users/profile` | Get or create user profile | ✅ |
+| `PUT` | `/api/users/profile` | Update user profile | ✅ |
 
-### Group Endpoints
-
-**GET** `/api/groups`
-- Get all groups for authenticated user
-
-**GET** `/api/groups/:groupId`
-- Get single group by ID
-
-**POST** `/api/groups`
-- Create new group
-- Body:
-```json
-{
-  "id": "generated-id",
-  "name": "Group Name",
-  "members": [
-    { "id": "m1", "name": "Alice" },
-    { "id": "m2", "name": "Bob" }
-  ]
-}
+**Example: Get/Create Profile**
+```bash
+curl -X POST http://localhost:5000/api/users/profile \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json"
 ```
 
-**PUT** `/api/groups/:groupId`
-- Update group (name, members, or expenses)
-- Body: Same as create
+---
 
-**DELETE** `/api/groups/:groupId`
-- Delete a group
+#### Group Endpoints
 
-### Expense Endpoints
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/groups` | List all user's groups | ✅ |
+| `GET` | `/api/groups/:id` | Get single group details | ✅ |
+| `POST` | `/api/groups` | Create new group | ✅ |
+| `PUT` | `/api/groups/:id` | Update group | ✅ |
+| `DELETE` | `/api/groups/:id` | Delete group | ✅ |
 
-**POST** `/api/groups/:groupId/expenses`
-- Add expense to group
-- Body:
-```json
-{
-  "id": "expense-id",
-  "description": "Dinner",
-  "amount": 90,
-  "paidBy": "m1",
-  "participants": ["m1", "m2", "m3"]
-}
+**Example: Create Group**
+```bash
+curl -X POST http://localhost:5000/api/groups \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Weekend Trip",
+    "members": [
+      {"id": "1", "name": "Alice"},
+      {"id": "2", "name": "Bob"}
+    ]
+  }'
 ```
 
-**DELETE** `/api/groups/:groupId/expenses/:expenseId`
-- Delete expense from group
+---
 
-## 🔐 Security Features
+#### Expense Endpoints
 
-- **Helmet**: Sets security HTTP headers
-- **CORS**: Configured for frontend origin only
-- **Rate Limiting**: 100 requests per 15 minutes per IP
-- **Firebase Auth**: Token-based authentication
-- **Input Validation**: Required fields checked
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/api/groups/:id/expenses` | Add expense to group | ✅ |
+| `DELETE` | `/api/groups/:id/expenses/:expenseId` | Delete expense | ✅ |
+
+**Example: Add Expense**
+```bash
+curl -X POST http://localhost:5000/api/groups/abc123/expenses \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "Dinner",
+    "amount": 120.50,
+    "paidBy": "1",
+    "participants": ["1", "2", "3"]
+  }'
+```
+
+---
 
 ## 🗄️ Database Schema
 
-### User Collection
+### Users Collection
+
 ```javascript
 {
-  firebaseUid: String (unique, indexed),
-  email: String (unique),
-  name: String,
+  _id: ObjectId,
+  firebaseUid: String,      // Firebase user ID
+  email: String,            // User email
+  name: String,             // Display name
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-### Group Collection
+### Groups Collection
+
 ```javascript
 {
-  id: String (unique, indexed),
-  name: String,
+  _id: ObjectId,
+  id: String,               // Unique group ID
+  name: String,             // Group name
+  userId: String,           // Owner's Firebase UID
   members: [
     {
-      id: String,
-      name: String
+      id: String,           // Member ID
+      name: String          // Member name
     }
   ],
   expenses: [
     {
-      id: String,
-      description: String,
-      amount: Number,
-      paidBy: String,
-      participants: [String],
-      date: Date
+      id: String,           // Expense ID
+      description: String,  // What was purchased
+      amount: Number,       // Total amount
+      paidBy: String,       // Member ID who paid
+      participants: [String], // Member IDs who share
+      date: Date            // When expense occurred
     }
   ],
-  userId: String (indexed),
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-## 🧪 Testing with cURL
+---
 
-**Health check:**
+## 🛠️ Tech Stack
+
+### Backend (Golang)
+
+| Technology | Purpose |
+|------------|---------|
+| **Go 1.21+** | Programming language |
+| **Fiber v2** | High-performance web framework |
+| **MongoDB Driver** | Database operations |
+| **Firebase Admin SDK** | Authentication & user management |
+| **godotenv** | Environment configuration |
+
+### Frontend (React)
+
+| Technology | Purpose |
+|------------|---------|
+| **React 18** | UI framework |
+| **CRACO** | Create React App configuration |
+| **TailwindCSS** | Utility-first CSS framework |
+| **Shadcn/ui** | Beautiful component library |
+| **Firebase SDK** | Client-side authentication |
+
+---
+
+## 🔨 Development Commands
+
+### Backend
+
 ```bash
-curl http://localhost:5000/health
+# Run development server
+go run main.go
+
+# Build binary
+go build -o split-it-backend
+
+# Format code
+go fmt ./...
+
+# Run tests
+go test ./...
+
+# Live reload (with Air)
+air
+
+# Build for production
+go build -ldflags="-s -w" -o split-it-backend
 ```
 
-**Get groups (with auth):**
+### Frontend
+
 ```bash
-curl -H "Authorization: Bearer YOUR_FIREBASE_TOKEN" \
-     http://localhost:5000/api/groups
+# Start development server
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+
+# Lint code
+npm run lint
 ```
+
+---
+
+## 📦 Deployment
+
+### Backend Deployment
+
+#### Build for Different Platforms
+
+```bash
+# Linux (64-bit)
+GOOS=linux GOARCH=amd64 go build -o split-it-backend-linux
+
+# Windows (64-bit)
+GOOS=windows GOARCH=amd64 go build -o split-it-backend.exe
+
+# macOS (64-bit)
+GOOS=darwin GOARCH=amd64 go build -o split-it-backend-mac
+
+# macOS (ARM - M1/M2)
+GOOS=darwin GOARCH=arm64 go build -o split-it-backend-mac-arm
+```
+
+#### Docker Deployment
+
+Create `backend/Dockerfile`:
+```dockerfile
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -ldflags="-s -w" -o main .
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
+COPY --from=builder /app/firebase-service-account.json .
+EXPOSE 5000
+CMD ["./main"]
+```
+
+Build and run:
+```bash
+docker build -t split-it-backend .
+docker run -p 5000:5000 split-it-backend
+```
+
+### Frontend Deployment
+
+```bash
+# Build production bundle
+npm run build
+
+# The 'build/' folder can be deployed to:
+# - Vercel
+# - Netlify
+# - AWS S3 + CloudFront
+# - Firebase Hosting
+# - Any static hosting service
+```
+
+---
 
 ## 🐛 Troubleshooting
 
-### MongoDB Connection Error
-- Check if MongoDB is running: `brew services list` (macOS) or `sudo systemctl status mongod` (Linux)
-- Verify connection string in `.env`
-- Try connecting with mongosh: `mongosh mongodb://localhost:27017/expense-tracker`
+### Backend Issues
 
-### Firebase Authentication Error
-- Verify `firebase-service-account.json` is in the backend directory
-- Check file path in `.env` is correct
-- Ensure Firebase project is set up correctly
-- Test token generation in frontend
-
-### Port Already in Use
-- Change PORT in `.env` to another port (e.g., 5001)
-- Or kill process using port 5000: `lsof -ti:5000 | xargs kill -9` (macOS/Linux)
-
-## 📚 Next Steps
-
-1. **Connect Frontend**: Update frontend to use this API instead of localStorage
-2. **Add Tests**: Write unit and integration tests
-3. **Add Validation**: Use Joi or express-validator for input validation
-4. **Add Logging**: Use Winston or Morgan for better logging
-5. **Deploy**: Deploy to Heroku, Railway, or AWS
-
-## 🔗 Related Documentation
-
-- [Express.js](https://expressjs.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
-- [MongoDB](https://www.mongodb.com/docs/)
-
-## 📝 License
-
-MIT
-=======
-Note: The frontend defaults to `http://localhost:5001` (see `REACT_APP_API_URL`). Set `PORT=5001` here or override the frontend var.
-
-4. Run the API
+#### Go command not found
 ```bash
-# development (auto-restart)
-npm run dev
-# production
-npm start
+# Install Go from https://go.dev/dl/
+# Verify installation
+go version
 ```
-- Health check: `curl http://localhost:5001/health`
-- Detailed endpoints: see [backend/README.md](backend/README.md)
 
-## Frontend Setup
-1. Install dependencies
+#### MongoDB connection failed
+- ✅ Verify MongoDB is running: `mongosh`
+- ✅ Check `MONGODB_URI` in `.env`
+- ✅ For Atlas: whitelist your IP address
+- ✅ Ensure network connectivity
+
+#### Firebase authentication errors
+- ✅ Verify `firebase-service-account.json` exists
+- ✅ Check `FIREBASE_SERVICE_ACCOUNT_PATH` in `.env`
+- ✅ Ensure Firebase project is properly configured
+- ✅ Verify service account has correct permissions
+
+#### Port already in use
+```bash
+# Find process using port 5000
+lsof -i :5000
+
+# Kill the process
+kill -9 <PID>
+
+# Or change PORT in .env
+PORT=5001
+```
+
+### Frontend Issues
+
+#### CORS errors
+- ✅ Set `CLIENT_URL=http://localhost:3000` in backend `.env`
+- ✅ Set `REACT_APP_API_URL=http://localhost:5000` in frontend `.env`
+- ✅ Restart both servers
+
+#### Firebase configuration errors
+- ✅ Verify all Firebase environment variables are set
+- ✅ Check Firebase console for correct values
+- ✅ Ensure Firebase project is active
+
+#### Dependencies installation failed
+```bash
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Or use yarn
+rm -rf node_modules yarn.lock
+yarn install
+```
+
+---
+
+## 🧪 Testing
+
+### Backend Tests
+
+```bash
+cd backend
+go test ./... -v
+```
+
+### Frontend Tests
+
 ```bash
 cd frontend
-# use yarn (project declares yarn in packageManager) or npm
-yarn
-# or
-npm install
-```
-2. Configure Firebase Web SDK via env
-- Create `frontend/.env` from example: `cp frontend/.env.example frontend/.env`
-- Fill `REACT_APP_FIREBASE_*` values from your Firebase Web app settings.
-- The app reads envs in [frontend/src/lib/firebase.js](frontend/src/lib/firebase.js).
-
-3. Point the app to your backend
-- Frontend reads `REACT_APP_API_URL` (default `http://localhost:5001`).
-- To change it, set in your shell or env file:
-```bash
-# macOS (zsh)
-export REACT_APP_API_URL=http://localhost:5000
+npm test
 ```
 
-4. Run the app
-```bash
-yarn start
-# or
-npm start
-```
-- Opens `http://localhost:3000`
+---
 
-## Running Together
-- Start backend in one terminal (`PORT=5001` recommended to match frontend default).
-- Start frontend in another terminal (`http://localhost:3000`).
-- Ensure `CLIENT_URL` in backend `.env` matches your frontend origin for CORS.
+## 📈 Performance
 
-## Key Features
-- Firebase Auth: Email/password login; backend verifies ID tokens
-- Groups & Expenses: Create/update/delete groups and expenses
-- Debt Simplification: See [frontend/src/lib/debtSimplification.js](frontend/src/lib/debtSimplification.js)
-- Secure API: Helmet, rate limiting, CORS, JSON parsing
+Split-It is built for performance:
 
-## Useful Scripts
-- Backend: `npm run dev` (nodemon) · `npm start`
-- Frontend: `yarn start` · `yarn build` · `yarn test` (or npm equivalents)
+- ⚡ **Go Backend**: Compiled binary with goroutines for concurrent operations
+- 🚀 **Fiber Framework**: One of the fastest Go web frameworks
+- 💾 **Efficient Caching**: Minimized database queries
+- 📦 **Optimized Builds**: Production builds with code splitting
+- 🔄 **Connection Pooling**: Reused database connections
 
-## Troubleshooting
-- Port mismatch: Align backend `PORT` with frontend `REACT_APP_API_URL`
-- MongoDB not running: `brew services start mongodb-community@7.0` (macOS)
-- Auth errors: Ensure service account at `backend/firebase-service-account.json` and frontend Firebase config is valid
-- CORS: Set `CLIENT_URL` in backend `.env` (e.g., `http://localhost:3000`)
+---
 
-## Next Steps
-- Replace any remaining local-only logic with API calls
-- Add integration tests and CI
-- Prepare deployment (MongoDB Atlas + Render/Vercel)
+## 🔒 Security Features
 
-## License
-Proprietary. All rights reserved.
->>>>>>> 6e5eabb (docs: add root README, cleanup MDs; feat: env-based Firebase, flexible CORS)
+- 🛡️ **JWT Verification**: All protected routes verify Firebase tokens
+- 🔐 **CORS Protection**: Configured allowed origins
+- ⏱️ **Rate Limiting**: Prevents abuse and DDoS attacks
+- 🔒 **Security Headers**: Helmet middleware for HTTP headers
+- 🚫 **Input Validation**: Sanitized user inputs
+- 🔑 **Environment Variables**: Sensitive data in `.env` files
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is proprietary. All rights reserved.
+
+---
+
+## 📞 Support
+
+Need help? Have questions?
+
+- 📧 Email: support@split-it.app
+- 💬 Issues: [GitHub Issues](https://github.com/yourusername/split-it/issues)
+- 📖 Documentation: [Wiki](https://github.com/yourusername/split-it/wiki)
+
+---
+
+<div align="center">
+
+**Built with ❤️ using Go and React**
+
+⭐ Star this repo if you find it helpful!
+
+</div>

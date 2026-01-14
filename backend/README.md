@@ -1,276 +1,257 @@
-# Expense Tracker Backend
+# Split-It Backend (Golang)
 
-Backend API for the Expense Tracker application with Firebase Authentication and MongoDB.
+A RESTful API backend built with Go (Golang) for the Split-It expense tracking application.
 
-## 🏗️ Architecture
+## Tech Stack
 
-- **Authentication**: Firebase Admin SDK
-- **Database**: MongoDB (local)
-- **Framework**: Express.js
-- **ODM**: Mongoose
+- **Go 1.21+** - Programming language
+- **Fiber v2** - Fast HTTP web framework
+- **MongoDB** - Database
+- **Firebase Admin SDK** - Authentication
+- **godotenv** - Environment variable management
 
-## 📁 Project Structure
+## Features
 
-```
-backend/
-├── src/
-│   ├── config/
-│   │   ├── database.js       # MongoDB connection
-│   │   └── firebase.js       # Firebase Admin setup
-│   ├── middleware/
-│   │   └── auth.js           # Firebase token verification
-│   ├── models/
-│   │   ├── User.js           # User schema
-│   │   └── Group.js          # Group & Expense schemas
-│   ├── routes/
-│   │   ├── users.js          # User endpoints
-│   │   └── groups.js         # Group & Expense endpoints
-│   └── server.js             # Main server file
-├── .env                      # Environment variables
-├── .env.example             # Environment template
-├── package.json
-└── README.md
-```
+- Firebase Authentication integration
+- MongoDB database with Mongoose-like operations
+- RESTful API endpoints for users and groups
+- Expense tracking and management
+- JWT token verification
+- CORS support
+- Rate limiting
+- Security headers with Helmet
 
-## 🚀 Setup Instructions
+## Prerequisites
 
-### 1. Install Dependencies
+- Go 1.21 or higher
+- MongoDB (local or Atlas)
+- Firebase project with service account key
 
+## Installation
+
+1. **Clone the repository** (if not already done)
+
+2. **Navigate to backend directory**
+   ```bash
+   cd backend
+   ```
+
+3. **Install dependencies**
+   ```bash
+   go mod download
+   ```
+
+4. **Set up environment variables**
+   
+   Copy `.env.example` to `.env` and fill in your values:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Required environment variables:
+   - `MONGODB_URI` - Your MongoDB connection string
+   - `FIREBASE_SERVICE_ACCOUNT_PATH` - Path to Firebase service account JSON file
+   - `PORT` - Server port (default: 5000)
+   - `CLIENT_URL` - Frontend URL for CORS (default: http://localhost:3000)
+
+5. **Add Firebase Service Account**
+   
+   Download your Firebase service account key from Firebase Console and save it as `firebase-service-account.json` in the backend directory.
+
+## Running the Server
+
+### Development Mode
 ```bash
-cd backend
-npm install
+go run main.go
 ```
 
-### 2. Install and Start MongoDB
-
-**macOS (using Homebrew):**
+### Build and Run
 ```bash
-brew tap mongodb/brew
-brew install mongodb-community@7.0
-brew services start mongodb-community@7.0
+# Build the application
+go build -o split-it-backend
+
+# Run the built binary
+./split-it-backend
 ```
 
-**Linux (Ubuntu):**
+### With Air (Live Reload)
+Install Air for live reloading during development:
 ```bash
-sudo apt-get install -y mongodb-org
-sudo systemctl start mongod
-sudo systemctl enable mongod
+# Install Air
+go install github.com/cosmtrek/air@latest
+
+# Run with Air
+air
 ```
 
-**Windows:**
-Download and install from [MongoDB Download Center](https://www.mongodb.com/try/download/community)
+## API Endpoints
 
-**Verify MongoDB is running:**
-```bash
-mongosh
-# Should connect to: mongodb://localhost:27017
-```
+### Health Check
+- `GET /health` - Server health status
 
-### 3. Setup Firebase Admin SDK
+### User Routes
+- `POST /api/users/profile` - Get or create user profile (requires auth)
+- `PUT /api/users/profile` - Update user profile (requires auth)
 
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Select your project (or create one)
-3. Go to **Project Settings** > **Service Accounts**
-4. Click **Generate New Private Key**
-5. Download the JSON file
-6. Rename it to `firebase-service-account.json`
-7. Place it in the `backend/` directory
+### Group Routes
+- `GET /api/groups` - Get all groups for user (requires auth)
+- `GET /api/groups/:groupId` - Get single group (requires auth)
+- `POST /api/groups` - Create new group (requires auth)
+- `PUT /api/groups/:groupId` - Update group (requires auth)
+- `DELETE /api/groups/:groupId` - Delete group (requires auth)
 
-### 4. Configure Environment Variables
+### Expense Routes
+- `POST /api/groups/:groupId/expenses` - Add expense to group (requires auth)
+- `DELETE /api/groups/:groupId/expenses/:expenseId` - Delete expense (requires auth)
 
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+## Authentication
 
-Update the values:
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/expense-tracker
-FIREBASE_SERVICE_ACCOUNT_PATH=./firebase-service-account.json
-CLIENT_URL=http://localhost:3000
-```
-
-### 5. Start the Server
-
-**Development mode (with auto-restart):**
-```bash
-npm run dev
-```
-
-**Production mode:**
-```bash
-npm start
-```
-
-Server will run on `http://localhost:5000`
-
-## 📡 API Endpoints
-
-### Authentication
-
-All endpoints (except `/health`) require a Firebase ID token in the Authorization header:
+All protected routes require a Firebase ID token in the Authorization header:
 ```
 Authorization: Bearer <firebase-id-token>
 ```
 
-### Health Check
+## Project Structure
 
-**GET** `/health`
-- Check if server is running
-- No authentication required
+```
+backend/
+├── main.go                 # Application entry point
+├── config/
+│   ├── database.go        # MongoDB connection
+│   └── firebase.go        # Firebase Admin SDK setup
+├── models/
+│   ├── user.go           # User model
+│   └── group.go          # Group model
+├── middleware/
+│   └── auth.go           # Authentication middleware
+├── routes/
+│   ├── users.go          # User routes
+│   └── groups.go         # Group routes
+├── go.mod                # Go module file
+├── go.sum                # Go dependencies checksum
+├── .env                  # Environment variables (not in git)
+└── .env.example          # Example environment variables
+```
 
-### User Endpoints
+## Database Schema
 
-**POST** `/api/users/profile`
-- Get or create user profile
-- Auto-creates user on first login
-
-**PUT** `/api/users/profile`
-- Update user name
-- Body: `{ "name": "New Name" }`
-
-### Group Endpoints
-
-**GET** `/api/groups`
-- Get all groups for authenticated user
-
-**GET** `/api/groups/:groupId`
-- Get single group by ID
-
-**POST** `/api/groups`
-- Create new group
-- Body:
+### Users Collection
 ```json
 {
-  "id": "generated-id",
-  "name": "Group Name",
+  "_id": "ObjectId",
+  "firebaseUid": "string",
+  "email": "string",
+  "name": "string",
+  "createdAt": "Date",
+  "updatedAt": "Date"
+}
+```
+
+### Groups Collection
+```json
+{
+  "_id": "ObjectId",
+  "id": "string",
+  "name": "string",
+  "userId": "string",
   "members": [
-    { "id": "m1", "name": "Alice" },
-    { "id": "m2", "name": "Bob" }
-  ]
-}
-```
-
-**PUT** `/api/groups/:groupId`
-- Update group (name, members, or expenses)
-- Body: Same as create
-
-**DELETE** `/api/groups/:groupId`
-- Delete a group
-
-### Expense Endpoints
-
-**POST** `/api/groups/:groupId/expenses`
-- Add expense to group
-- Body:
-```json
-{
-  "id": "expense-id",
-  "description": "Dinner",
-  "amount": 90,
-  "paidBy": "m1",
-  "participants": ["m1", "m2", "m3"]
-}
-```
-
-**DELETE** `/api/groups/:groupId/expenses/:expenseId`
-- Delete expense from group
-
-## 🔐 Security Features
-
-- **Helmet**: Sets security HTTP headers
-- **CORS**: Configured for frontend origin only
-- **Rate Limiting**: 100 requests per 15 minutes per IP
-- **Firebase Auth**: Token-based authentication
-- **Input Validation**: Required fields checked
-
-## 🗄️ Database Schema
-
-### User Collection
-```javascript
-{
-  firebaseUid: String (unique, indexed),
-  email: String (unique),
-  name: String,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### Group Collection
-```javascript
-{
-  id: String (unique, indexed),
-  name: String,
-  members: [
     {
-      id: String,
-      name: String
+      "id": "string",
+      "name": "string"
     }
   ],
-  expenses: [
+  "expenses": [
     {
-      id: String,
-      description: String,
-      amount: Number,
-      paidBy: String,
-      participants: [String],
-      date: Date
+      "id": "string",
+      "description": "string",
+      "amount": "number",
+      "paidBy": "string",
+      "participants": ["string"],
+      "date": "Date"
     }
   ],
-  userId: String (indexed),
-  createdAt: Date,
-  updatedAt: Date
+  "createdAt": "Date",
+  "updatedAt": "Date"
 }
 ```
 
-## 🧪 Testing with cURL
+## Development
 
-**Health check:**
+### Code Formatting
 ```bash
-curl http://localhost:5000/health
+go fmt ./...
 ```
 
-**Get groups (with auth):**
+### Run Tests
 ```bash
-curl -H "Authorization: Bearer YOUR_FIREBASE_TOKEN" \
-     http://localhost:5000/api/groups
+go test ./...
 ```
 
-## 🐛 Troubleshooting
+### Build for Production
+```bash
+# Build for current platform
+go build -o split-it-backend
 
-### MongoDB Connection Error
-- Check if MongoDB is running: `brew services list` (macOS) or `sudo systemctl status mongod` (Linux)
-- Verify connection string in `.env`
-- Try connecting with mongosh: `mongosh mongodb://localhost:27017/expense-tracker`
+# Build for Linux
+GOOS=linux GOARCH=amd64 go build -o split-it-backend-linux
 
-### Firebase Authentication Error
-- Verify `firebase-service-account.json` is in the backend directory
-- Check file path in `.env` is correct
-- Ensure Firebase project is set up correctly
-- Test token generation in frontend
+# Build for Windows
+GOOS=windows GOARCH=amd64 go build -o split-it-backend.exe
+```
 
-### Port Already in Use
-- Change PORT in `.env` to another port (e.g., 5001)
-- Or kill process using port 5000: `lsof -ti:5000 | xargs kill -9` (macOS/Linux)
+## Deployment
 
-## 📚 Next Steps
+### Docker (Optional)
+Create a `Dockerfile`:
+```dockerfile
+FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o main .
 
-1. **Connect Frontend**: Update frontend to use this API instead of localStorage
-2. **Add Tests**: Write unit and integration tests
-3. **Add Validation**: Use Joi or express-validator for input validation
-4. **Add Logging**: Use Winston or Morgan for better logging
-5. **Deploy**: Deploy to Heroku, Railway, or AWS
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
+COPY --from=builder /app/firebase-service-account.json .
+EXPOSE 5000
+CMD ["./main"]
+```
 
-## 🔗 Related Documentation
+Build and run:
+```bash
+docker build -t split-it-backend .
+docker run -p 5000:5000 split-it-backend
+```
 
-- [Express.js](https://expressjs.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup)
-- [MongoDB](https://www.mongodb.com/docs/)
+## Differences from Node.js Version
 
-## 📝 License
+- Uses Go's native goroutines for concurrency
+- Fiber framework instead of Express
+- MongoDB driver with BSON instead of Mongoose
+- More type-safe with Go's static typing
+- Better performance and lower memory footprint
+- Compiled binary for deployment
+
+## Troubleshooting
+
+### MongoDB Connection Issues
+- Verify `MONGODB_URI` is correct
+- Check if MongoDB is running
+- For Atlas, ensure IP whitelist is configured
+
+### Firebase Authentication Issues
+- Verify service account JSON file exists
+- Check `FIREBASE_SERVICE_ACCOUNT_PATH` in `.env`
+- Ensure Firebase project is properly configured
+
+### CORS Issues
+- Verify `CLIENT_URL` matches your frontend URL
+- Check if frontend is sending credentials correctly
+
+## License
 
 MIT
