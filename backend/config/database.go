@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"log"
 	"os"
@@ -24,25 +23,24 @@ func ConnectDB() {
 		log.Fatal("❌ MONGODB_URI environment variable is not set")
 	}
 
-	// Configure TLS for MongoDB Atlas
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: false,
-		MinVersion:         tls.VersionTLS12,
-	}
-
+	// MongoDB driver will automatically configure TLS for mongodb+srv:// URIs
 	clientOptions := options.Client().
 		ApplyURI(mongoURI).
-		SetTLSConfig(tlsConfig).
 		SetServerSelectionTimeout(30 * time.Second).
-		SetConnectTimeout(30 * time.Second)
+		SetConnectTimeout(30 * time.Second).
+		SetMaxPoolSize(10).
+		SetMinPoolSize(1)
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatalf("❌ MongoDB Connection Error: %v", err)
 	}
 
-	// Ping the database
-	err = client.Ping(ctx, nil)
+	// Ping the database with a longer timeout
+	pingCtx, pingCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer pingCancel()
+
+	err = client.Ping(pingCtx, nil)
 	if err != nil {
 		log.Fatalf("❌ MongoDB Ping Error: %v", err)
 	}
