@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"os"
@@ -15,7 +16,7 @@ var DB *mongo.Database
 
 // ConnectDB initializes MongoDB connection
 func ConnectDB() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	mongoURI := os.Getenv("MONGODB_URI")
@@ -23,7 +24,18 @@ func ConnectDB() {
 		log.Fatal("❌ MONGODB_URI environment variable is not set")
 	}
 
-	clientOptions := options.Client().ApplyURI(mongoURI)
+	// Configure TLS for MongoDB Atlas
+	tlsConfig := &tls.Config{
+		InsecureSkipVerify: false,
+		MinVersion:         tls.VersionTLS12,
+	}
+
+	clientOptions := options.Client().
+		ApplyURI(mongoURI).
+		SetTLSConfig(tlsConfig).
+		SetServerSelectionTimeout(30 * time.Second).
+		SetConnectTimeout(30 * time.Second)
+
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatalf("❌ MongoDB Connection Error: %v", err)
@@ -37,7 +49,7 @@ func ConnectDB() {
 
 	// Get database name from URI or use default
 	DB = client.Database("split-it")
-	
+
 	fmt.Println("✅ MongoDB Connected")
 }
 
