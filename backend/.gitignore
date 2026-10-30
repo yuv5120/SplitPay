@@ -1,0 +1,43 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Firebase
+firebase-service-account.json
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Build output
+/split-it-backend
+/split-it-backend-linux
+/split-it-backend.exe
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
